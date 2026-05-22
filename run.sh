@@ -57,7 +57,7 @@ cat <<EOF > /elk/kibana/config/kibana.yml
 server.name: kibana
 server.host: "0"
 elasticsearch.hosts: [ "http://${ES_HOST}:9200" ]
-xpack.monitoring.ui.container.elasticsearch.enabled: true
+monitoring.ui.container.elasticsearch.enabled: true
 i18n.locale: "zh-CN"		# 设置为中文
 EOF
 
@@ -71,14 +71,18 @@ chmod -R 777 /elk/filebeat
 cat <<EOF > /elk/filebeat/config/filebeat.yml
 # Default Filebeat Config
 filebeat.inputs:
-  - type: log
+  - type: filestream
+    id: local-log-files
     enabled: true
     paths:
       # 容器中目录下的所有.log文件
       - /usr/share/filebeat/logs/*.log
-    multiline.pattern: ^\[
-    multiline.negate: true
-    multiline.match: after
+    parsers:
+      - multiline:
+          type: pattern
+          pattern: '^\\['
+          negate: true
+          match: after
 
 filebeat.config.modules:
   # 此处需要用到转移符

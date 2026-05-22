@@ -40,8 +40,8 @@ OpenJDK 64-Bit Server VM (Red_Hat-11.0.16.1.1-1.el7_9) (build 11.0.16.1+1-LTS, m
 - 操作系统：CentOS 7
 - Docker：20.10.18
 - Docker-Compose：2.4.1
-- ELK Version：7.4.2
-- Filebeat：7.4.2
+- ELK Version：9.4.1
+- Filebeat：9.4.1
 - JAVA：11.0.16.1
 
 #### Docker-Compose变量配置
@@ -51,7 +51,7 @@ OpenJDK 64-Bit Server VM (Red_Hat-11.0.16.1.1-1.el7_9) (build 11.0.16.1+1-LTS, m
 .env
 
 ```
-ES_VERSION=7.1.0
+ES_VERSION=9.4.1
 ```
 
 #### Docker-Compose服务配置
@@ -59,13 +59,12 @@ ES_VERSION=7.1.0
 > 创建Docker-Compose的配置文件：
 
 ```yaml
-version: '3.4'
-
 services:
     elasticsearch:
         image: "docker.elastic.co/elasticsearch/elasticsearch:${ES_VERSION}"
         environment:
             - discovery.type=single-node
+            - xpack.security.enabled=false
         volumes:
             - /etc/localtime:/etc/localtime
             - /elk/elasticsearch/data:/usr/share/elasticsearch/data
@@ -207,7 +206,7 @@ mkdir -p /elk/kibana/config
 server.name: kibana
 server.host: "0"
 elasticsearch.hosts: [ "http://elasticsearch:9200" ]
-xpack.monitoring.ui.container.elasticsearch.enabled: true
+monitoring.ui.container.elasticsearch.enabled: true
 i18n.locale: "zh-CN"		# 设置为中文
 
 [root@VM-0-5-centos config]# 
@@ -245,14 +244,18 @@ filebeat.yml
 
 ```yaml
 filebeat.inputs:
-  - type: log
+  - type: filestream
+    id: local-log-files
     enabled: true
     paths:
       # 容器中目录下的所有.log文件
       - /usr/share/filebeat/logs/*.log
-    multiline.pattern: ^\[
-    multiline.negate: true
-    multiline.match: after
+    parsers:
+      - multiline:
+          type: pattern
+          pattern: '^\['
+          negate: true
+          match: after
 
 filebeat.config.modules:
   path: ${path.config}/modules.d/*.yml
