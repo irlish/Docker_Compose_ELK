@@ -204,7 +204,7 @@ mkdir -p /elk/kibana/config
 [root@VM-0-5-centos config]# cat kibana.yml 
 # Default Kibana configuration for docker target
 server.name: kibana
-server.host: "0"
+server.host: "0.0.0.0"
 elasticsearch.hosts: [ "http://elasticsearch:9200" ]
 monitoring.ui.container.elasticsearch.enabled: true
 i18n.locale: "zh-CN"		# 设置为中文

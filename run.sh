@@ -55,7 +55,7 @@ chmod -R 777 /elk/kibana
 cat <<EOF > /elk/kibana/config/kibana.yml 
 # Default Kibana configuration for docker target
 server.name: kibana
-server.host: "0"
+server.host: "0.0.0.0"
 elasticsearch.hosts: [ "http://${ES_HOST}:9200" ]
 monitoring.ui.container.elasticsearch.enabled: true
 i18n.locale: "zh-CN"		# 设置为中文
