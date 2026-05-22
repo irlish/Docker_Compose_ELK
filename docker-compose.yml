@@ -6,7 +6,7 @@ services:
             - xpack.security.enabled=false
             - ES_JAVA_OPTS=-Xms512m -Xmx512m
         volumes:
-            - es-data:/usr/share/elasticsearch/data
+            - es-data-9:/usr/share/elasticsearch/data
             - ./config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro
             - es-plugins:/usr/share/elasticsearch/plugins
         ports:
@@ -51,6 +51,6 @@ services:
             - logstash
 
 volumes:
-    es-data:
+    es-data-9:
     es-plugins:
     filebeat-data:

@@ -347,6 +347,8 @@ processors:
 
 ### 四、启动
 
+如果之前使用 7.x 版本启动过本项目，旧的 Elasticsearch 数据卷不能被 9.4.1 直接读取。当前 `docker-compose.yml` 使用新的 `es-data-9` 数据卷来避免复用旧数据；如需保留旧数据，请按 Elastic 官方升级路径先升级到 8.19.0，再升级到 9.4.1。
+
 随后使用docker-compose命令启动：
 
 ```bash
